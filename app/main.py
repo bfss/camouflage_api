@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.article import router as article_router
 
 
 app = FastAPI()
+
+app.mount("/static/images", StaticFiles(directory="static/images"), name="images")
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,6 +17,4 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-@app.get("/")
-def hello():
-    return {"data": "hello2"}
+app.include_router(article_router)

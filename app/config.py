@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     DATABASE_USER = "postgres"
     DATABASE_PASSWORD = "postgres"
     DATABASE_NAME = "camouflage"
+    IMAGE_FOLDER = "static/images"
 
 
 @lru_cache()

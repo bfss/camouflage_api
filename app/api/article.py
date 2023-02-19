@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from app.database import get_db
 from app.config import get_settings
 from app.crud import article as crud_article
+from app.api.security import is_login
 
 
 router = APIRouter()
@@ -15,7 +16,12 @@ settings = get_settings()
 
 
 @router.post("/article")
-def post_article(title: str = Form(), content: str = Form(), db=Depends(get_db)):
+def post_article(
+    title: str = Form(),
+    content: str = Form(),
+    db=Depends(get_db),
+    user=Depends(is_login),
+):
     """接收文章"""
     soup = BeautifulSoup(content, "html.parser")
     images = soup.find_all("img")
@@ -33,4 +39,4 @@ def post_article(title: str = Form(), content: str = Form(), db=Depends(get_db))
         with open(image_path, "wb") as f:
             f.write(data)
         image["src"] = f"http://127.0.0.1:8000/{image_path}"
-    print(str(soup))
+    #db_article = crud_article.post_article(title, soup, user.id, datetime.now(), db)

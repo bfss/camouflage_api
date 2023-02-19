@@ -1,3 +1,7 @@
+# alembic
+alembic/
+alembic.ini
+
 # vscode
 .vscode/
 

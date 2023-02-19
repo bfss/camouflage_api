@@ -10,6 +10,10 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD = "postgres"
     DATABASE_NAME = "camouflage"
     IMAGE_FOLDER = "static/images"
+    # openssl rand -hex 32
+    SECRET_KEY = "a749de9651e5088025df4b22e93be2a2693c585971a8fed3a216d2f2523e300a"
+    ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 2
 
 
 @lru_cache()

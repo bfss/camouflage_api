@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from app.database import get_db
 from app.config import get_settings
 from app.crud import article as crud_article
+from app.schema import article as schema_article
 from app.api.security import is_login
 
 
@@ -25,7 +26,7 @@ def post_article(
     """接收文章"""
     soup = BeautifulSoup(content, "html.parser")
     images = soup.find_all("img")
-    for i, image in enumerate(images):
+    for image in images:
         head, encode = image["src"].split(",", 1)
         ext = head.split(";")[0].split("/")[1]
         data = base64.b64decode(encode)
@@ -39,4 +40,14 @@ def post_article(
         with open(image_path, "wb") as f:
             f.write(data)
         image["src"] = f"http://127.0.0.1:8000/{image_path}"
-    #db_article = crud_article.post_article(title, soup, user.id, datetime.now(), db)
+    crud_article.post_article(title, str(soup), user.get("id"), datetime.now(), db)
+
+
+@router.get("/article", response_model=list[schema_article.AtriclesResponse])
+def get_articles(db=Depends(get_db)):
+    return crud_article.get_articles(db)
+
+
+@router.get("/article/{article_id}")
+def get_article(article_id: int, db=Depends(get_db)):
+    return crud_article.get_article(article_id, db)

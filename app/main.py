@@ -7,11 +7,13 @@ from app.api.article import router as article_router
 from app.api.user import router as user_router
 from app.database import SessionLocal
 from app.crud import user as crud_user
+from app.config import get_settings
 
 
-app = FastAPI()
+app = FastAPI(title="API", version="0.1.0", openapi_url=None)
+settings = get_settings()
 
-app.mount("/static/images", StaticFiles(directory="static/images"), name="images")
+app.mount(settings.IMAGE_FOLDER, StaticFiles(directory=settings.IMAGE_FOLDER), name="images")
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,10 +29,10 @@ app.include_router(user_router)
 @app.on_event("startup")
 def startup():
     db = SessionLocal()
-    if not crud_user.get_user(db, "admin"):
+    if not crud_user.get_user(db, settings.SUPER_USER):
         crud_user.create_user(
             db,
-            username="admin",
-            password=pbkdf2_sha256.hash("123456")
+            username=settings.SUPER_USER,
+            password=pbkdf2_sha256.hash(settings.SUPER_USER_PASSWORD)
         )
     db.close()

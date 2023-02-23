@@ -4,7 +4,7 @@ from app.model.user import User
 
 
 def get_user(db: Session, username: str):
-    return db.query(User).filter(username == username).first()
+    return db.query(User).filter(User.username == username).first()
 
 
 def create_user(db: Session, username: str, password: str):

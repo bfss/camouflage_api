@@ -6,6 +6,7 @@ from jose import jwt
 from app.database import get_db
 from app.config import get_settings
 from app.crud import user as crud_user
+from app.api.security import is_login
 
 
 router = APIRouter()
@@ -26,3 +27,7 @@ def login(username: str = Form(), password: str = Form(), db=Depends(get_db)):
         )
         return {"access_token": encoded_jwt}
     raise HTTPException(status.HTTP_401_UNAUTHORIZED)
+
+@router.get("/checkout")
+def checkout(user=Depends(is_login)):
+    pass

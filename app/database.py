@@ -7,7 +7,7 @@ from app.config import get_settings
 settings = get_settings()
 
 engine = create_engine(
-    f"postgresql+psycopg://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}"
+    settings.DATABASE_URL
 )
 
 SessionLocal = sessionmaker(engine, autoflush=False, autocommit=False)

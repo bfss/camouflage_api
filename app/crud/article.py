@@ -9,6 +9,7 @@ def post_article(title: str, content: str, user_id: int, timestamp: datetime, db
     db_article = Article(title=title, content=content, user_id=user_id, timestamp=timestamp)
     db.add(db_article)
     db.commit()
+    db.refresh(db_article)
     return db_article
 
 

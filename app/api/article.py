@@ -40,7 +40,10 @@ def post_article(
         with open(image_path, "wb") as f:
             f.write(data)
         image["src"] = f"http://127.0.0.1:8000/{image_path}"
-    crud_article.post_article(title, str(soup), user.get("id"), datetime.now(), db)
+    db_article = crud_article.post_article(
+        title, str(soup), user.get("id"), datetime.now(), db
+    )
+    return {"id": db_article.id}
 
 
 @router.get("/article", response_model=list[schema_article.AtriclesResponse])

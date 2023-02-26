@@ -13,7 +13,7 @@ from app.config import get_settings
 app = FastAPI(title="API", version="0.1.0", openapi_url=None)
 settings = get_settings()
 
-app.mount(settings.IMAGE_FOLDER, StaticFiles(directory=settings.IMAGE_FOLDER), name="images")
+app.mount("/static/images", StaticFiles(directory="static/images"), name="images")
 
 app.add_middleware(
     CORSMiddleware,

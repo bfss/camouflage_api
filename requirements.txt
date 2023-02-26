@@ -19,7 +19,6 @@ passlib==1.7.4
 pathspec==0.11.0
 platformdirs==3.0.0
 psycopg==3.1.8
-psycopg-binary==3.1.8
 psycopg-pool==3.1.6
 pyasn1==0.4.8
 pycparser==2.21

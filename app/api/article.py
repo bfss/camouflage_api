@@ -39,7 +39,7 @@ def post_article(
                 break
         with open(image_path, "wb") as f:
             f.write(data)
-        image["src"] = f"http://127.0.0.1:8000/{image_path}"
+        image["src"] = f"{settings.SERVER_NAME}/{image_path}"
     db_article = crud_article.post_article(
         title, str(soup), user.get("id"), datetime.now(), db
     )

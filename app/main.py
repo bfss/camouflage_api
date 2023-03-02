@@ -13,7 +13,8 @@ from app.config import get_settings
 app = FastAPI(title="API", version="0.1.0", openapi_url=None)
 settings = get_settings()
 
-app.mount("/static/images", StaticFiles(directory="static/images"), name="images")
+# 拼接到URL的路径，实际的文件夹路径，内部使用的路径
+app.mount("/static/images", StaticFiles(directory=settings.IMAGE_FOLDER), name="images")
 
 app.add_middleware(
     CORSMiddleware,

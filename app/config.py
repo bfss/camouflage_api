@@ -18,14 +18,14 @@ class DevSettings(BaseSettings):
 class ProdSettings(BaseSettings):
     DATABASE_URL: str
     IMAGE_FOLDER: str
-    SECRET_KEY = str
-    ALGORITHM = str
-    ACCESS_TOKEN_EXPIRE_MINUTES = int
-    SUPER_USER = str
-    SUPER_USER_PASSWORD = str
-    SERVER_NAME = str
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    SUPER_USER: str
+    SUPER_USER_PASSWORD: str
+    SERVER_NAME: str
 
 
 @lru_cache()
 def get_settings():
-    return DevSettings()
+    return ProdSettings()

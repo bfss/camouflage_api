@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: camouflageapi
+    image: api
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -37,11 +37,11 @@ services:
   proxy:
     image: nginx
     ports:
-      - 4433:443
-      - 8800:80
+      - 443:443
+      - 80:80
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/cert:/etc/nginx/cert/
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
 volumes:
   images:

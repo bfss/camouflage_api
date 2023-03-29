@@ -42,6 +42,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./build:/var/www/html:ro
       - images:/images:ro
 
 volumes:

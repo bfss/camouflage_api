@@ -21,3 +21,14 @@ def get_articles(db: Session):
 def get_article(article_id: int, db: Session):
     """获取一篇文章"""
     return db.query(Article).filter(Article.id == article_id).first()
+
+
+def update_article(article_id: int, title:str, content: str, db: Session):
+    """更新文章内容"""
+    db_article = db.query(Article).filter(Article.id == article_id).first()
+    db_article.title = title
+    db_article.content = content
+    db.add(db_article)
+    db.commit()
+    db.refresh(db_article)
+    return db_article

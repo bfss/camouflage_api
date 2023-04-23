@@ -18,13 +18,12 @@ settings = get_settings()
 
 @router.post("/article")
 def post_article(
-    title: str = Form(),
-    content: str = Form(),
+    article: schema_article.ArticlePost,
     db=Depends(get_db),
     user=Depends(is_login),
 ):
     """接收文章"""
-    soup = BeautifulSoup(content, "html.parser")
+    soup = BeautifulSoup(article.content, "html.parser")
     images = soup.find_all("img")
     for image in images:
         head, encode = image["src"].split(",", 1)
@@ -41,7 +40,7 @@ def post_article(
             f.write(data)
         image["src"] = f"{settings.SERVER_NAME}/{image_path}"
     db_article = crud_article.post_article(
-        title, str(soup), user.get("id"), datetime.now(), db
+        article.title, str(soup), user.get("id"), datetime.now(), db
     )
     return {"id": db_article.id}
 
@@ -54,3 +53,8 @@ def get_articles(db=Depends(get_db)):
 @router.get("/article/{article_id}")
 def get_article(article_id: int, db=Depends(get_db)):
     return crud_article.get_article(article_id, db)
+
+@router.patch("/article/{article_id}")
+def patch_article(article_id:int, article: schema_article.ArticlePost, db=Depends(get_db)):
+    db_article = crud_article.update_article(article_id, article.title, article.content, db)
+    return {"id": db_article.id}

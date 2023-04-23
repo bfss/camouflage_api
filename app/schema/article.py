@@ -10,3 +10,7 @@ class AtriclesResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ArticlePost(BaseModel):
+    title: str
+    content: str

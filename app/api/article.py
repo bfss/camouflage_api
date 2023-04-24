@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-from uuid import uuid4
-import base64
 from datetime import datetime
 from fastapi import APIRouter, Form, Depends
 from bs4 import BeautifulSoup
@@ -10,6 +8,7 @@ from app.config import get_settings
 from app.crud import article as crud_article
 from app.schema import article as schema_article
 from app.api.security import is_login
+from app.tools.image import save_image
 
 
 router = APIRouter()
@@ -26,18 +25,7 @@ def post_article(
     soup = BeautifulSoup(article.content, "html.parser")
     images = soup.find_all("img")
     for image in images:
-        head, encode = image["src"].split(",", 1)
-        ext = head.split(";")[0].split("/")[1]
-        data = base64.b64decode(encode)
-        folder = os.path.join(settings.IMAGE_FOLDER, datetime.now().strftime("%Y%m%d"))
-        os.makedirs(folder, exist_ok=True)
-        while True:
-            image_name = str(uuid4())[:8]
-            image_path = os.path.join(folder, f"{image_name}.{ext}")
-            if not os.path.isfile(image_path):
-                break
-        with open(image_path, "wb") as f:
-            f.write(data)
+        image_path = save_image(image)
         image["src"] = f"{settings.SERVER_NAME}/{image_path}"
     db_article = crud_article.post_article(
         article.title, str(soup), user.get("id"), datetime.now(), db
@@ -54,7 +42,15 @@ def get_articles(db=Depends(get_db)):
 def get_article(article_id: int, db=Depends(get_db)):
     return crud_article.get_article(article_id, db)
 
+
 @router.patch("/article/{article_id}")
 def patch_article(article_id:int, article: schema_article.ArticlePost, db=Depends(get_db)):
-    db_article = crud_article.update_article(article_id, article.title, article.content, db)
+    """更新文章"""
+    soup = BeautifulSoup(article.content, "html.parser")
+    images = soup.find_all("img")
+    for image in images:
+        image_path = save_image(image)
+        image["src"] = f"{settings.SERVER_NAME}/{image_path}"
+    
+    db_article = crud_article.update_article(article_id, article.title, str(soup), db)
     return {"id": db_article.id}
